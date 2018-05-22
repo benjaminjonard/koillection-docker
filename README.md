@@ -9,7 +9,7 @@
 ## docker-compose
 
     koillection:
-        image: koillection:latest
+        image: koillection/koillection:latest
         restart: always
         ports:
             - 80:8880
@@ -18,7 +18,7 @@
         depends_on:
             - postgres
         volumes:
-            - "./volumes/koillection/uploads:/koillection/public/uploads"
+            - "./volumes/koillection/public/uploads:/koillection/public/uploads"
 
     postgres:
         image: postgres:alpine
