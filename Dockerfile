@@ -70,7 +70,7 @@ RUN BUILD_DEPS=" \
     && cd /koillection \
     && touch .env \
     # Update composer
-    && composer install -o --prefer-dist --no-dev --no-scripts --no-progress --no-suggest \
+    && composer install -o --no-scripts --no-progress --no-suggest \
     && composer clear-cache \
     && chmod +x /usr/local/bin/run.sh /etc/s6.d/*/* /etc/s6.d/.s6-svscan/*
 
