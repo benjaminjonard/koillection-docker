@@ -10,6 +10,7 @@
 
     koillection:
         image: koillection/koillection:latest
+        container_name: koillection
         restart: always
         ports:
             - 80:8880
