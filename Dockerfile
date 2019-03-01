@@ -3,11 +3,6 @@ FROM alpine:edge
 LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 
 ENV UID=991 GID=991
-ENV APP_ENV "prod"
-ENV APP_DEBUG 0
-ENV APP_SECRET "937lZdyx5gfBwPpQZ074"
-ENV DATABASE_URL ""
-ENV SHOW_ADMIN_TOOLS 0
 
 COPY run.sh /usr/local/bin/run.sh
 COPY s6.d /etc/s6.d
