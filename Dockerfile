@@ -1,82 +1,67 @@
-FROM alpine:edge
+FROM debian:buster-slim
 
+# Set version label
 LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 
-ENV UID=991 GID=991
+# Environment variables
+ENV PUID='1000'
+ENV PGID='1000'
+ENV USER='koillection'
+ENV PHP_TZ=Europe/Paris
 
-COPY run.sh /usr/local/bin/run.sh
-COPY s6.d /etc/s6.d
+# Add User and Group
+RUN \
+    addgroup --gid "$PGID" "$USER" && \
+    adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER"
 
-RUN BUILD_DEPS=" \
-    tar \
-    libressl \
-    ca-certificates \
-    build-base \
-    autoconf \
-    pcre-dev \
-    libtool" \
-    && apk update \
-    && apk upgrade --update-cache --available \
-    && apk add \
-        ${BUILD_DEPS} \
-        git \
-        unzip \
-        nginx \
-        curl \
-        php7 \
-        php7-cgi \
-        php7-dom \
-        php7-xml \
-        php7-xmlwriter \
-        php7-curl \
-        php7-mbstring \
-        php7-fpm \
-        php7-exif \
-        php7-openssl \
-        php7-gd \
-        php7-phar \
-        php7-json \
-        php7-pdo \
-        php7-pdo_pgsql \
-        php7-zip \
-        php7-session \
-        php7-ctype \
-        php7-apcu \
-        php7-tokenizer \
-        php7-opcache \
-        php7-simplexml \
-        php7-fileinfo \
-        php7-sodium \
-        php7-iconv \
-        php7-intl \
-        s6 \
-        su-exec \
-    && apk del ${BUILD_DEPS} \
-    && rm -rf /var/cache/apk/* /tmp/* \
-    # Add composer
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer --version \
-    && mkdir -p /koillection \
-    # Get Koillection latest release
-    && last_tag=$(curl -sX GET "https://api.github.com/repos/koillection/koillection/releases/latest" | awk '/tag_name/{print $4;exit}' FS='[""]') \
-    && curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/${last_tag}.tar.gz" \
-    && tar xf /tmp/koillection.tar.gz -C /koillection --strip-components=1 \
-    && rm -rf /tmp/* \
-    && cd /koillection \
-    && touch .env \
-    # Update composer
-    && composer install -o --no-scripts --no-progress --no-suggest \
-    && composer clear-cache \
-    && chmod +x /usr/local/bin/run.sh /etc/s6.d/*/* /etc/s6.d/.s6-svscan/*
+# Install base dependencies, clone the repo and install php libraries
+RUN \
+    apt-get update && \
+    apt-get install -y \
+    nginx-light \
+    php7.3-pgsql \
+    php7.3-mbstring \
+    php7.3-json \
+    php7.3-gd \
+    php7.3-xml \
+    php7.3-zip \
+    php7.3-fpm \
+    php7.3-intl \
+    php7.3-apcu \
+    curl \
+    libimage-exiftool-perl \
+    ffmpeg \
+    git \
+    composer && \
+    mkdir -p /var/www/koillection && \
+    curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/v1.1.tar.gz" && \
+    tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
+    rm -rf /tmp/* && \
+    cd /var/www/koillection && \
+    apt-get install -y composer && \
+    composer install --no-scripts && \
+    chown -R www-data:www-data /var/www/koillection && \
+    apt-get purge -y git && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./php.ini /usr/local/etc/php/php.ini
-COPY php-fpm.conf /etc/php7/php-fpm.conf
+# Add custom site to apache
+COPY default.conf /etc/nginx/nginx.conf
+COPY php.ini /usr/local/etc/php/php.ini
 
-WORKDIR "/koillection"
+EXPOSE 80
+VOLUME /conf /uploads
 
-EXPOSE 8880
+WORKDIR /var/www/koillection
 
-VOLUME ["/koillection/public/uploads"]
+COPY entrypoint.sh inject.sh /
 
-CMD ["run.sh"]
+RUN chmod +x /entrypoint.sh && \
+    chmod +x /inject.sh && \
+    mkdir /run/php
+
+HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+
+CMD [ "nginx" ]

@@ -11,20 +11,27 @@
     koillection:
         image: koillection/koillection:latest
         container_name: koillection
-        restart: always
+        restart: unless-stopped
         ports:
-            - 80:8880
+            - 80:80
         environment:
-            - DATABASE_URL=pgsql://root:root@postgres:5432/koillection?charset=utf8&serverVersion=10.4
+            - DB_NAME=koillection
+            - DB_HOST=postgres
+            - DB_PORT=5432
+            - DB_USER=root
+            - DB_PASSWORD=root
+            - DB_VERSION=10.4
+            - PHP_TZ=Europe/Paris
         depends_on:
             - postgres
         volumes:
-            - "./volumes/koillection/public/uploads:/koillection/public/uploads"
+            - ./docker/volumes/koillection/conf:/conf
+            - ./docker/volumes/koillection/uploads:/uploads
 
     postgres:
         image: postgres:alpine
         container_name: postgres
-        restart: always
+        restart: unless-stopped
         ports:
             - "5432:5432"
         environment:
