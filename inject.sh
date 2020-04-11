@@ -29,5 +29,5 @@ if [ "$DB_VERSION" != '' ]; then
 fi
 
 if [ "$PHP_TZ" != '' ]; then
-    sed -i "s|;*date.timezone =.*|date.timezone = ${PHP_TZ}|i" /etc/php/7.3/cli/php.ini
+    sed -i "s|;*date.timezone =.*|date.timezone = ${PHP_TZ}|i" /etc/php/7.4/cli/php.ini
 fi

@@ -49,5 +49,5 @@ mkdir -p /logs/nginx
 chown -R "$USER":"$USER" /logs/nginx
 
 echo "**** Setup complete, starting the server. ****"
-php-fpm7.3
+php-fpm7.4
 exec $@

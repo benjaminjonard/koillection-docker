@@ -14,35 +14,47 @@ RUN \
     addgroup --gid "$PGID" "$USER" && \
     adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER"
 
-# Install base dependencies, clone the repo and install php libraries
+# Install php 7.4 and other dependencies
 RUN \
     apt-get update && \
     apt-get install -y \
+    lsb-release \
+    apt-transport-https \
+    wget \
+    ca-certificates && \
+    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
+    apt-get update && \
+    apt-get install -y \
+    php7.4 \
+    php7.4-pgsql \
+    php7.4-mbstring \
+    php7.4-json \
+    php7.4-gd \
+    php7.4-xml \
+    php7.4-zip \
+    php7.4-fpm \
+    php7.4-intl \
+    php7.4-apcu \
     nginx-light \
-    php7.3-pgsql \
-    php7.3-mbstring \
-    php7.3-json \
-    php7.3-gd \
-    php7.3-xml \
-    php7.3-zip \
-    php7.3-fpm \
-    php7.3-intl \
-    php7.3-apcu \
     curl \
     libimage-exiftool-perl \
     ffmpeg \
     git \
-    composer && \
+    composer
+
+# Clone the repo
+RUN \
     mkdir -p /var/www/koillection && \
     curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/v1.1.tar.gz" && \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    apt-get install -y composer && \
     composer install --no-scripts && \
     chown -R www-data:www-data /var/www/koillection && \
-    apt-get purge -y git && \
+    apt-get purge -y git wget && \
     apt-get autoremove -y && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Add custom site to apache
