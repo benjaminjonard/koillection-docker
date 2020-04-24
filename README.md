@@ -9,7 +9,7 @@
 ## docker-compose
 
     koillection:
-        image: koillection/koillection:latest
+        image: benjaminjonard/koillection:dev
         container_name: koillection
         restart: unless-stopped
         ports:
@@ -25,8 +25,7 @@
         depends_on:
             - postgres
         volumes:
-            - ./docker/volumes/koillection/conf:/conf
-            - ./docker/volumes/koillection/uploads:/uploads
+            - ./:/var/www/koillection
 
     postgres:
         image: postgres:alpine

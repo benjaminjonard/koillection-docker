@@ -35,6 +35,7 @@ RUN \
     php7.4-fpm \
     php7.4-intl \
     php7.4-apcu \
+    php7.4-xdebug \
     $TOOL_DEPS && \
 # Add composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
