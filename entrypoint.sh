@@ -2,23 +2,8 @@
 
 set -e
 
-echo "**** Make sure the /conf and /uploads folders exist ****"
-[ ! -f /conf ] && \
-	mkdir -p /conf
-[ ! -f /uploads ] && \
-	mkdir -p /uploads
-
-echo "**** Create the symbolic link for the /uploads folder ****"
-[ ! -L /var/www/koillection/public/uploads ] && \
-	cp -r /var/www/koillection/public/uploads/. /uploads && \
-	rm -r /var/www/koillection/public/uploads && \
-	ln -s /uploads /var/www/koillection/public/uploads
-
-echo "**** Copy the .env to /conf ****" && \
-[ ! -e /conf/.env.local ] && \
-	cp /var/www/koillection/.env /conf/.env.local
-[ ! -L /var/www/koillection/.env ] && \
-	ln -s /conf/.env.local /var/www/koillection/.env.local
+[ ! -e /var/www/koillection/.env.local ] && \
+	cp /var/www/koillection/.env /var/www/koillection/.env.local
 
 echo "**** Inject .env values ****" && \
 	/inject.sh
@@ -38,10 +23,7 @@ echo -e " \tUser UID :\t$(id -u "$USER")"
 echo -e " \tUser GID :\t$(id -g "$USER")"
 
 echo "**** Set Permissions ****" && \
-chown -R "$USER":"$USER" /conf
-chown -R "$USER":"$USER" /uploads
 usermod -a -G "$USER" www-data
-chmod -R 775 /uploads
 chown -R www-data:www-data /var/www/koillection
 
 echo "**** Create nginx log files ****" && \

@@ -41,14 +41,10 @@ RUN \
     composer --version && \
 # Clone the repo
     mkdir -p /var/www/koillection && \
-    curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/v1.1.tar.gz" && \
-    tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
-    rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    composer install --classmap-authoritative && \
     chown -R www-data:www-data /var/www/koillection && \
 # Clean up
-    apt-get purge -y $BUILD_DEPS && \
+    apt-get purge -y git && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
@@ -62,7 +58,7 @@ COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/7.4/fpm/conf.d/php.ini
 
 EXPOSE 80
-VOLUME /conf /uploads
+VOLUME /var/www/koillection/public/uploads
 WORKDIR /var/www/koillection
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
