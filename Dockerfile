@@ -40,8 +40,12 @@ RUN \
     curl \
     libimage-exiftool-perl \
     ffmpeg \
-    git \
-    composer
+    git
+
+# Add composer
+RUN \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer --version
 
 # Clone the repo
 RUN \
@@ -50,8 +54,11 @@ RUN \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    composer install --no-scripts && \
-    chown -R www-data:www-data /var/www/koillection && \
+    composer install --classmap-authoritative && \
+    chown -R www-data:www-data /var/www/koillection
+
+# Clean up
+RUN \
     apt-get purge -y git wget && \
     apt-get autoremove -y && \
     apt-get clean && \
@@ -59,7 +66,7 @@ RUN \
 
 # Add custom site to apache
 COPY default.conf /etc/nginx/nginx.conf
-COPY php.ini /usr/local/etc/php/php.ini
+COPY php.ini /etc/php/7.4/fpm/conf.d/php.ini
 
 EXPOSE 80
 VOLUME /conf /uploads
