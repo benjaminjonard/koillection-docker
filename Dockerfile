@@ -46,12 +46,14 @@ RUN \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
     composer install --classmap-authoritative && \
+    composer clearcache && \
     chown -R www-data:www-data /var/www/koillection && \
 # Clean up
     apt-get purge -y $BUILD_DEPS && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
+    rm -rf /usr/local/bin/composer && \
 # Set permisions
     chmod +x /entrypoint.sh && \
     chmod +x /inject.sh && \
