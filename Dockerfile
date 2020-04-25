@@ -9,8 +9,8 @@ ENV PGID='1000'
 ENV USER='koillection'
 ENV PHP_TZ=Europe/Paris
 
-ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git"
-ENV TOOL_DEPS="nginx-light"
+ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget git"
+ENV TOOL_DEPS="nginx-light curl"
 
 COPY entrypoint.sh inject.sh /
 
@@ -64,8 +64,11 @@ COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/7.4/fpm/conf.d/php.ini
 
 EXPOSE 80
+
 VOLUME /conf /uploads
+
 WORKDIR /var/www/koillection
+
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
 ENTRYPOINT [ "/entrypoint.sh" ]
