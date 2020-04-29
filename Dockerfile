@@ -27,6 +27,7 @@ RUN \
     apt-get install -y \
     php7.4 \
     php7.4-pgsql \
+    php7.4-mysql \
     php7.4-mbstring \
     php7.4-json \
     php7.4-gd \

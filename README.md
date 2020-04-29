@@ -7,7 +7,6 @@
 - *IMPORTANT :* Please note that a running `postgres` server must be available before starting the Koillection container. 
 
 ## docker-compose
-
     koillection:
         image: benjaminjonard/koillection:dev
         container_name: koillection
@@ -15,6 +14,7 @@
         ports:
             - 80:80
         environment:
+            - DB_DRIVER=pdo_pgsql (or pdo_mysql)
             - DB_NAME=koillection
             - DB_HOST=postgres
             - DB_PORT=5432
@@ -39,3 +39,13 @@
             - POSTGRES_PASSWORD=root
         volumes:
             - "./volumes/postgresql:/var/lib/postgresql/data"
+    
+    mysql:
+        container_name: mysql
+        image: mysql:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=koillection
+            - MYSQL_USER=root
+        volumes:
+            - "./docker/volumes/mysql:/var/lib/mysql"
