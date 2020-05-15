@@ -10,7 +10,7 @@ if [ "$APP_SECRET" != '' ]; then
 fi
 
 if [ "$DB_DRIVER" != '' ]; then
-    sed -i "s|DB_DRIVER=.*|DB_DRIVER=${DB_DRIVER}|i" "/var/www/koillection/.env.local"
+    sed -i "s|DB_DRIVER=.*|DB_DRIVER=${DB_DRIVER}|i" "/conf/.env.local"
 fi
 if [ "$DB_NAME" != '' ]; then
     sed -i "s|DB_NAME=.*|DB_NAME=${DB_NAME}|i" "/conf/.env.local"
