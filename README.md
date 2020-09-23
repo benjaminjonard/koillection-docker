@@ -9,7 +9,7 @@
 ## docker-compose
     # Koillection
     koillection:
-        image: koillection/koillection:latest
+        image: koillection/koillection:v1.1
         container_name: koillection
         restart: unless-stopped
         ports:
