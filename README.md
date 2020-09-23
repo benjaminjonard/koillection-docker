@@ -24,7 +24,7 @@
             - DB_VERSION=12.2
             - PHP_TZ=Europe/Paris
         depends_on:
-            - postgres
+            - db
         volumes:
             - ./docker/volumes/koillection/conf:/conf
             - ./docker/volumes/koillection/uploads:/uploads
