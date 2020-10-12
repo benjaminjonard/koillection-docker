@@ -12,7 +12,7 @@
     services:
         # Koillection
         koillection:
-            image: docker.pkg.github.com/koillection/koillection/fpm:latest
+            image: koillection/koillection
             container_name: koillection
             restart: unless-stopped
             ports:
