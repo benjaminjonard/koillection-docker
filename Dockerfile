@@ -3,6 +3,8 @@ FROM debian:buster-slim
 # Set version label
 LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 
+ARG GITHUB_RELEASE
+
 # Environment variables
 ENV PUID='1000'
 ENV PGID='1000'
@@ -42,7 +44,7 @@ RUN \
     composer --version && \
 # Clone the repo
     mkdir -p /var/www/koillection && \
-    curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/v1.1.tar.gz" && \
+    curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/$GITHUB_RELEASE.tar.gz" && \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
