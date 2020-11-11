@@ -39,17 +39,14 @@ RUN \
     php7.4-intl \
     php7.4-apcu \
     $TOOL_DEPS && \
-# Add composer
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer --version && \
 # Clone the repo
     mkdir -p /var/www/koillection && \
     curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/$GITHUB_RELEASE.tar.gz" && \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    composer install --classmap-authoritative && \
-    composer clearcache && \
+    bin/composer install --classmap-authoritative && \
+    bin/composer clearcache && \
     chown -R www-data:www-data /var/www/koillection && \
 # Clean up
     apt-get purge -y $BUILD_DEPS && \
