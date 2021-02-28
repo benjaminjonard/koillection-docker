@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 # Set version label
 LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
@@ -20,24 +20,23 @@ RUN \
 # Add User and Group
     addgroup --gid "$PGID" "$USER" && \
     adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
-# Install php 7.4 and other dependencies
+# Install php 8.0 and other dependencies
     apt-get update && \
     apt-get install -y $BUILD_DEPS && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
     apt-get update && \
     apt-get install -y \
-    php7.4 \
-    php7.4-pgsql \
-    php7.4-mysql \
-    php7.4-mbstring \
-    php7.4-json \
-    php7.4-gd \
-    php7.4-xml \
-    php7.4-zip \
-    php7.4-fpm \
-    php7.4-intl \
-    php7.4-apcu \
+    php8.0 \
+    php8.0-pgsql \
+    php8.0-mysql \
+    php8.0-mbstring \
+    php8.0-gd \
+    php8.0-xml \
+    php8.0-zip \
+    php8.0-fpm \
+    php8.0-intl \
+    php8.0-apcu \
     $TOOL_DEPS && \
 # Clone the repo
     mkdir -p /var/www/koillection && \
@@ -61,7 +60,7 @@ RUN \
 
 # Add custom site to apache
 COPY default.conf /etc/nginx/nginx.conf
-COPY php.ini /etc/php/7.4/fpm/conf.d/php.ini
+COPY php.ini /etc/php/8.0/fpm/conf.d/php.ini
 
 EXPOSE 80
 
