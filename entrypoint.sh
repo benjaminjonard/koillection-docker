@@ -10,24 +10,23 @@ echo "**** Make sure the /conf and /uploads folders exist ****"
 
 echo "**** Create the symbolic link for the /uploads folder ****"
 [ ! -L /var/www/koillection/public/uploads ] && \
-	cp -r /var/www/koillection/public/uploads/. /uploads && \
+	cp -r /var/www/koillection/public/uploads/* /uploads && \
 	rm -r /var/www/koillection/public/uploads && \
 	ln -s /uploads /var/www/koillection/public/uploads
 
-echo "**** Copy the .env to /conf ****" && \
+echo "**** Copy the .env to /conf ****"
 [ ! -e /conf/.env.local ] && \
 	cp /var/www/koillection/.env /conf/.env.local
-[ ! -L /var/www/koillection/.env ] && \
+[ ! -L /var/www/koillection/.env.local ] && \
 	ln -s /conf/.env.local /var/www/koillection/.env.local
 
-echo "**** Inject .env values ****" && \
+echo "**** Inject .env values ****"
 	/inject.sh
 
-[ ! -e /tmp/first_run ] && \
-	echo "**** Migrate the database ****" && \
-	cd /var/www/koillection && \
-	php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod && \
-	touch /tmp/first_run
+
+echo "**** Migrate the database ****"
+cd /var/www/koillection && \
+php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod
 
 echo "**** Create user and use PUID/PGID ****"
 PUID=${PUID:-1000}
