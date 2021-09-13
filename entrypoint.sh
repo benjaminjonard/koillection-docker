@@ -10,7 +10,7 @@ echo "**** Make sure the /conf and /uploads folders exist ****"
 
 echo "**** Create the symbolic link for the /uploads folder ****"
 [ ! -L /var/www/koillection/public/uploads ] && \
-	cp -r /var/www/koillection/public/uploads/* /uploads && \
+	cp -r /var/www/koillection/public/uploads/. /uploads && \
 	rm -r /var/www/koillection/public/uploads && \
 	ln -s /uploads /var/www/koillection/public/uploads
 
