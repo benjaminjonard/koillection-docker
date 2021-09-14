@@ -30,12 +30,6 @@ fi
 if [ "$DB_VERSION" != '' ]; then
     sed -i "s|DB_VERSION=.*|DB_VERSION=${DB_VERSION}|i" "/conf/.env.local"
 fi
-if [ "$TRUSTED_HEADERS" != '' ]; then
-    sed -i "s|TRUSTED_HEADERS=.*|TRUSTED_HEADERS=${TRUSTED_HEADERS}|i" "/conf/.env.local"
-fi
-if [ "$TRUSTED_PROXIES" != '' ]; then
-    sed -i "s|TRUSTED_PROXIES=.*|TRUSTED_PROXIES=${TRUSTED_PROXIES}|i" "/conf/.env.local"
-fi
 
 if [ "$PHP_TZ" != '' ]; then
     sed -i "s|;*date.timezone =.*|date.timezone = ${PHP_TZ}|i" /etc/php/8.0/cli/php.ini
