@@ -10,6 +10,7 @@ ENV PUID='1000'
 ENV PGID='1000'
 ENV USER='koillection'
 ENV PHP_TZ=Europe/Paris
+ENV HTTPS_ENABLED=1
 
 ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget git"
 ENV TOOL_DEPS="nginx-light curl"
@@ -61,6 +62,7 @@ RUN \
 # Add custom site to apache
 COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/8.0/fpm/conf.d/php.ini
+RUN echo "session.cookie_secure=$HTTPS_ENABLED" >> /etc/php/8.0/fpm/conf.d/php.ini
 
 EXPOSE 80
 
