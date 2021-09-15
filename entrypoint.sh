@@ -45,7 +45,6 @@ chown -R "$USER":"$USER" /conf
 chown -R "$USER":"$USER" /uploads
 usermod -a -G "$USER" www-data
 chmod -R 775 /uploads
-chown -R www-data:www-data /var/www/koillection
 
 echo "**** Create nginx log files ****" && \
 mkdir -p /logs/nginx
