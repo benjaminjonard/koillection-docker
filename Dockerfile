@@ -10,7 +10,7 @@ ENV PUID='1000'
 ENV PGID='1000'
 ENV USER='koillection'
 ENV PHP_TZ=Europe/Paris
-ENV HTTPS_ENABLED=1
+ENV HTTPS_ENABLED=${HTTPS_ENABLED}
 
 ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget git"
 ENV TOOL_DEPS="nginx-light curl"
