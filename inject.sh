@@ -8,6 +8,9 @@ fi
 if [ "$APP_SECRET" != '' ]; then
     sed -i "s|APP_SECRET=.*|APP_SECRET=${APP_SECRET}|i" "/conf/.env.local"
 fi
+if [ "$HTTPS_ENABLED" != '' ]; then
+    sed -i "s|HTTPS_ENABLED=.*|HTTPS_ENABLED=${HTTPS_ENABLED}|i" "/conf/.env.local"
+fi
 
 if [ "$DB_DRIVER" != '' ]; then
     sed -i "s|DB_DRIVER=.*|DB_DRIVER=${DB_DRIVER}|i" "/conf/.env.local"

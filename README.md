@@ -26,6 +26,7 @@
                 - DB_PASSWORD=root
                 - DB_VERSION=12.2
                 - PHP_TZ=Europe/Paris
+                - HTTPS_ENABLED=1 (1 or 0)
             depends_on:
                 - db
             volumes:
