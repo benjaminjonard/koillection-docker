@@ -24,8 +24,9 @@ echo "**** Inject .env values ****"
 	/inject.sh
 
 echo "**** Configure https ****"
-echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.0/fpm/conf.d/php.ini
-
+if ! grep -q "session.cookie_secure=" /etc/php/8.0/fpm/conf.d/php.ini; then
+    echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.0/fpm/conf.d/php.ini
+fi
 
 echo "**** Migrate the database ****"
 cd /var/www/koillection && \
