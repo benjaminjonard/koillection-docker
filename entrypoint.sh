@@ -49,7 +49,7 @@ chmod -R 775 /uploads
 echo "**** Create nginx log files ****" && \
 mkdir -p /logs/nginx
 chown -R "$USER":"$USER" /logs/nginx
-chown -R www-data:www-data /var/www/koillection
+chown -R www-data:www-data /var/www/koillection/var
 
 echo "**** Setup complete, starting the server. ****"
 php-fpm8.0
