@@ -58,6 +58,7 @@ RUN \
 # Add custom site to apache
 COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/8.0/fpm/conf.d/php.ini
+RUN echo "session.cookie_secure=$HTTPS_ENABLED" >> /etc/php/8.0/fpm/conf.d/php.ini
 
 EXPOSE 80
 VOLUME /var/www/koillection/public/uploads
