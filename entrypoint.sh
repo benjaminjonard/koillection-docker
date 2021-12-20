@@ -24,8 +24,8 @@ echo "**** Inject .env values ****"
 	/inject.sh
 
 echo "**** Configure https ****"
-if ! grep -q "session.cookie_secure=" /etc/php/8.0/fpm/conf.d/php.ini; then
-    echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.0/fpm/conf.d/php.ini
+if ! grep -q "session.cookie_secure=" /etc/php/8.1/fpm/conf.d/php.ini; then
+    echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.1/fpm/conf.d/php.ini
 fi
 
 echo "**** Migrate the database ****"
@@ -52,5 +52,5 @@ chown -R "$USER":"$USER" /logs/nginx
 chown -R www-data:www-data /var/www/koillection/var
 
 echo "**** Setup complete, starting the server. ****"
-php-fpm8.0
+php-fpm8.1
 exec $@
