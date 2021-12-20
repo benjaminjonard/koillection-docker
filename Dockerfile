@@ -21,7 +21,7 @@ RUN \
 # Add User and Group
     addgroup --gid "$PGID" "$USER" && \
     adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
-# Install php 8.0 and other dependencies
+# Install php 8.1 and other dependencies
     apt-get update && \
     apt-get install -y $BUILD_DEPS $TOOL_DEPS && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
@@ -31,16 +31,16 @@ RUN \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
     apt-get install -y \
-    php8.0 \
-    php8.0-pgsql \
-    php8.0-mysql \
-    php8.0-mbstring \
-    php8.0-gd \
-    php8.0-xml \
-    php8.0-zip \
-    php8.0-fpm \
-    php8.0-intl \
-    php8.0-apcu \
+    php8.1 \
+    php8.1-pgsql \
+    php8.1-mysql \
+    php8.1-mbstring \
+    php8.1-gd \
+    php8.1-xml \
+    php8.1-zip \
+    php8.1-fpm \
+    php8.1-intl \
+    php8.1-apcu \
     yarn && \
 # Clone the repo
     mkdir -p /var/www/koillection && \
