@@ -19,24 +19,24 @@ RUN \
 # Add User and Group
     addgroup --gid "$PGID" "$USER" && \
     adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
-# Install php 8.0 and other dependencies
+# Install php 8.1 and other dependencies
     apt-get update && \
     apt-get install -y $BUILD_DEPS && \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
     apt-get update && \
     apt-get install -y \
-    php8.0 \
-    php8.0-pgsql \
-    php8.0-mysql \
-    php8.0-mbstring \
-    php8.0-gd \
-    php8.0-xml \
-    php8.0-zip \
-    php8.0-fpm \
-    php8.0-intl \
-    php8.0-apcu \
-    php8.0-xdebug \
+    php8.1 \
+    php8.1-pgsql \
+    php8.1-mysql \
+    php8.1-mbstring \
+    php8.1-gd \
+    php8.1-xml \
+    php8.1-zip \
+    php8.1-fpm \
+    php8.1-intl \
+    php8.1-apcu \
+    php8.1-xdebug \
     $TOOL_DEPS && \
 # Add composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
@@ -57,8 +57,8 @@ RUN \
 
 # Add custom site to apache
 COPY default.conf /etc/nginx/nginx.conf
-COPY php.ini /etc/php/8.0/fpm/conf.d/php.ini
-RUN echo "session.cookie_secure=$HTTPS_ENABLED" >> /etc/php/8.0/fpm/conf.d/php.ini
+COPY php.ini /etc/php/8.1/fpm/conf.d/php.ini
+RUN echo "session.cookie_secure=$HTTPS_ENABLED" >> /etc/php/8.1/fpm/conf.d/php.ini
 
 EXPOSE 80
 VOLUME /var/www/koillection/public/uploads
