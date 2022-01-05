@@ -10,7 +10,6 @@ ENV PUID='1000'
 ENV PGID='1000'
 ENV USER='koillection'
 ENV PHP_TZ=Europe/Paris
-ENV HTTPS_ENABLED=$HTTPS_ENABLED
 
 ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget git yarn gnupg2"
 ENV TOOL_DEPS="nginx-light curl"
@@ -48,7 +47,7 @@ RUN \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    bin/composer install --classmap-authoritative && \
+    SYMFONY_ENV=prod php bin/composer install --classmap-authoritative && \
     bin/composer clearcache && \
 # Build assets \
     cd ./assets && \
