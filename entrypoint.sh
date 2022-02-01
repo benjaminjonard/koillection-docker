@@ -32,6 +32,9 @@ echo "**** Migrate the database ****"
 cd /var/www/koillection && \
 php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod
 
+echo "**** Execute scheduled tasks ****"
+php bin/console koillection:scheduled-tasks:execute --env=prod
+
 echo "**** Create user and use PUID/PGID ****"
 PUID=${PUID:-1000}
 PGID=${PGID:-1000}
