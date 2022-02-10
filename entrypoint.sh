@@ -32,6 +32,10 @@ echo "**** Migrate the database ****"
 cd /var/www/koillection && \
 php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod
 
+echo "**** Create API keys ****"
+cd /var/www/koillection && \
+php bin/console lexik:jwt:generate-keypair --skip-if-exists --env=prod
+
 echo "**** Create user and use PUID/PGID ****"
 PUID=${PUID:-1000}
 PGID=${PGID:-1000}
