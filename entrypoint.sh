@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -34,7 +34,7 @@ php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration
 
 echo "**** Create API keys ****"
 cd /var/www/koillection && \
-php bin/console lexik:jwt:generate-keypair --skip-if-exists --env=prod
+php bin/console lexik:jwt:generate-keypair --overwrite --env=prod
 
 echo "**** Create user and use PUID/PGID ****"
 PUID=${PUID:-1000}

@@ -15,7 +15,7 @@ ENV APP_DEBUG=0
 ENV HTTPS_ENABLED=$HTTPS_ENABLED
 
 ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget git yarn gnupg2"
-ENV TOOL_DEPS="nginx-light curl"
+ENV TOOL_DEPS="nginx-light curl openssl"
 
 COPY entrypoint.sh inject.sh /
 
@@ -50,7 +50,7 @@ RUN \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    bin/composer install --classmap-authoritative && \
+    bin/composer install --no-dev --classmap-authoritative && \
     bin/composer clearcache && \
 # Build assets \
     cd ./assets && \
