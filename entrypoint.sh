@@ -16,7 +16,7 @@ echo "**** Create the symbolic link for the /uploads folder ****"
 
 echo "**** Copy the .env to /conf ****"
 [ ! -e /conf/.env.local ] && \
-	cp /var/www/koillection/.env /conf/.env.local
+	touch /conf/.env.local
 [ ! -L /var/www/koillection/.env.local ] && \
 	ln -s /conf/.env.local /var/www/koillection/.env.local
 
