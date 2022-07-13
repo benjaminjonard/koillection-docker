@@ -45,10 +45,12 @@ echo -e " \tUser UID :\t$(id -u "$USER")"
 echo -e " \tUser GID :\t$(id -g "$USER")"
 
 echo "**** Set Permissions ****" && \
-chown -R "$USER":"$USER" /conf
-chown -R "$USER":"$USER" /uploads
+find /uploads -type d \( ! -user "$USER" -o ! -group "$USER" \) -exec chown -R "$USER":"$USER" \{\} \;
+find /conf/.env.local /uploads \( ! -user "$USER" -o ! -group "$USER" \) -exec chown "$USER":"$USER" \{\} \;
 usermod -a -G "$USER" www-data
-chmod -R 775 /uploads
+find /uploads -type d \( ! -perm -ug+w -o ! -perm -ugo+rX \) -exec chmod -R ug+w,ugo+rX \{\} \;
+find /conf/.env.local /uploads \( ! -perm -ug+w -o ! -perm -ugo+rX \) -exec chmod ug+w,ugo+rX \{\} \;
+
 
 echo "**** Create nginx log files ****" && \
 mkdir -p /logs/nginx
