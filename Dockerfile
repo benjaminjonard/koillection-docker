@@ -71,7 +71,7 @@ RUN \
 # Clean up \
     yarn cache clean && \
     rm -rf ./assets/node_modules && \
-    apt-get purge -y wget curl lsb-release git nodejs yarn apt-transport-https ca-certificates gnupg2 unzip && \
+    apt-get purge -y wget lsb-release git nodejs yarn apt-transport-https ca-certificates gnupg2 unzip && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
