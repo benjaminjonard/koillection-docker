@@ -77,7 +77,7 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /var/www/koillection/bin/composer && \
 # Set permisions \
-    chown -R www-data:www-data /var/www/koillection && \
+    chown -R "$USER":"$USER" /var/www/koillection && \
     chmod +x /entrypoint.sh && \
     chmod +x /inject.sh && \
     mkdir /run/php
