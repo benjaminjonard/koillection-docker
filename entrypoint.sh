@@ -54,7 +54,7 @@ find /conf/.env.local /uploads \( ! -perm -ug+w -o ! -perm -ugo+rX \) -exec chmo
 echo "**** Create nginx log files ****" && \
 mkdir -p /logs/nginx
 chown -R "$USER":"$USER" /logs/nginx
-chown -R "$USER":"$USER" /var/www/koillection/var
+chown -R "$USER":"$USER" /var/www/koillection/var/*
 
 echo "**** Setup complete, starting the server. ****"
 php-fpm8.1
