@@ -54,14 +54,16 @@ RUN \
     php8.1-apcu \
     nodejs \
     yarn && \
+# Composer
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 # Clone the repo
     mkdir -p /var/www/koillection && \
     curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/$GITHUB_RELEASE.tar.gz" && \
     tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
     cd /var/www/koillection && \
-    bin/composer install --no-dev --classmap-authoritative && \
-    bin/composer clearcache && \
+    composer install --no-dev --classmap-authoritative && \
+    composer clearcache && \
 # Build assets \
     cd ./assets && \
     yarn --version && \
@@ -75,7 +77,7 @@ RUN \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/www/koillection/bin/composer && \
+    rm -rf /usr/local/bin/composer && \
 # Set permisions \
     chown -R "$USER":"$USER" /var/www/koillection && \
     chmod +x /entrypoint.sh && \
