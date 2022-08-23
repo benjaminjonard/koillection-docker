@@ -64,6 +64,10 @@ RUN \
     cd /var/www/koillection && \
     composer install --no-dev --classmap-authoritative && \
     composer clearcache && \
+# Dump translation files for javascript \
+    php bin/console bazinga:js-translation:dump assets/js --format=js && \
+    rm -rf ./var/cache/* && \
+    rm -rf ./var/logs/* && \
 # Build assets \
     cd ./assets && \
     yarn --version && \
