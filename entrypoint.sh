@@ -55,11 +55,14 @@ echo "**** Create nginx log files ****" && \
 mkdir -p /logs/nginx
 chown -R "$USER":"$USER" /logs/nginx
 
-[ ! -f /var/www/koillection/var/logs ] && \
-	mkdir -p /var/www/koillection/var/logs
-[ ! -f /var/www/koillection/var/logs/prod.log ] && \
-	touch /var/www/koillection/var/logs/prod.log
-chown -R www-data:www-data /var/www/koillection/var 
+echo "**** Create symfony log files ****" && \
+[ ! -f /var/www/koillection/var/log ] && \
+	mkdir -p /var/www/koillection/var/log
+
+[ ! -f /var/www/koillection/var/log/prod.log ] && \
+	touch /var/www/koillection/var/log/prod.log
+
+chown -R www-data:www-data /var/www/koillection/var
 
 echo "**** Setup complete, starting the server. ****"
 php-fpm8.1
