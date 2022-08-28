@@ -57,9 +57,8 @@ chown -R "$USER":"$USER" /logs/nginx
 
 [ ! -f /var/www/koillection/var/logs ] && \
 	mkdir -p /var/www/koillection/var/logs
-[ ! -f /var/www/koillection/var/logs/prod.log ] && \
-	touch /var/www/koillection/var/logs/prod.log
-chown -R "$USER":"$USER" /var/www/koillection/var/*
+[ ! -f /var/www/koillection/var/log/prod.log ] && \
+	touch /var/www/koillection/var/log/prod.log
 
 echo "**** Setup complete, starting the server. ****"
 php-fpm8.1
