@@ -54,6 +54,7 @@ find /conf/.env.local /uploads \( ! -perm -ug+w -o ! -perm -ugo+rX \) -exec chmo
 echo "**** Create nginx log files ****" && \
 mkdir -p /logs/nginx
 chown -R "$USER":"$USER" /logs/nginx
+touch /var/www/koillection/var/logs/prod.log
 chown -R "$USER":"$USER" /var/www/koillection/var/*
 
 echo "**** Setup complete, starting the server. ****"
