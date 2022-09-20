@@ -4,9 +4,6 @@ FROM debian:buster-slim
 LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 
 # Environment variables
-ENV PUID='1000'
-ENV PGID='1000'
-ENV USER='koillection'
 ENV PHP_TZ=Europe/Paris
 ENV HTTPS_ENABLED=1
 
@@ -16,9 +13,6 @@ ENV TOOL_DEPS="nginx-light"
 COPY entrypoint.sh inject.sh /
 
 RUN \
-# Add User and Group
-    addgroup --gid "$PGID" "$USER" && \
-    adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
 # Install php 8.1 and other dependencies
     apt-get update && \
     apt-get install -y $BUILD_DEPS && \
@@ -63,6 +57,9 @@ RUN echo "session.cookie_secure=$HTTPS_ENABLED" >> /etc/php/8.1/fpm/conf.d/php.i
 EXPOSE 80
 VOLUME /var/www/koillection/public/uploads
 WORKDIR /var/www/koillection
+
+RUN usermod -u 1000 www-data
+
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
 ENTRYPOINT [ "/entrypoint.sh" ]

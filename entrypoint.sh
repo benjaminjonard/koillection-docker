@@ -14,21 +14,8 @@ echo "**** Inject .env values ****" && \
 	php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod && \
 	touch /tmp/first_run
 
-echo "**** Create user and use PUID/PGID ****"
-PUID=${PUID:-1000}
-PGID=${PGID:-1000}
-if [ ! "$(id -u "$USER")" -eq "$PUID" ]; then usermod -o -u "$PUID" "$USER" ; fi
-if [ ! "$(id -g "$USER")" -eq "$PGID" ]; then groupmod -o -g "$PGID" "$USER" ; fi
-echo -e " \tUser UID :\t$(id -u "$USER")"
-echo -e " \tUser GID :\t$(id -g "$USER")"
-
 echo "**** Set Permissions ****" && \
-usermod -a -G "$USER" www-data
-chown -R www-data:www-data /var/www/koillection
-
-echo "**** Create nginx log files ****" && \
-mkdir -p /logs/nginx
-chown -R "$USER":"$USER" /logs/nginx
+chown -R www-data:www-data  /var/www/koillection
 
 echo "**** Setup complete, starting the server. ****"
 php-fpm8.1
