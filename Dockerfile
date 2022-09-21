@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:11-slim
 
 # Set version label
 LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
