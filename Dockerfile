@@ -7,8 +7,12 @@ LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 ENV PHP_TZ=Europe/Paris
 ENV HTTPS_ENABLED=1
 
-ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git chromium-driver firefox-esr"
+ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git chromium chromium-driver"
 ENV TOOL_DEPS="nginx-light"
+
+# Chromium and ChromeDriver
+ENV PANTHER_NO_SANDBOX 1
+ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
 
 COPY entrypoint.sh inject.sh /
 
