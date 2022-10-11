@@ -21,6 +21,7 @@ RUN \
     apt-get update && \
     apt-get install -y \
     php8.1 \
+    php8.1-curl \
     php8.1-pgsql \
     php8.1-mysql \
     php8.1-mbstring \
