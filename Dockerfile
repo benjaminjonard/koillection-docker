@@ -7,7 +7,7 @@ LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 ENV PHP_TZ=Europe/Paris
 ENV HTTPS_ENABLED=1
 
-ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git"
+ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git chromium-chromedriver firefox-geckodriver"
 ENV TOOL_DEPS="nginx-light"
 
 COPY entrypoint.sh inject.sh /
@@ -20,8 +20,6 @@ RUN \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
     apt-get update && \
     apt-get install -y \
-    chromium-chromedriver \
-    firefox-geckodriver \
     php8.1 \
     php8.1-curl \
     php8.1-pgsql \
