@@ -20,6 +20,8 @@ RUN \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
     apt-get update && \
     apt-get install -y \
+    chromium-chromedriver \
+    firefox-geckodriver \
     php8.1 \
     php8.1-curl \
     php8.1-pgsql \
