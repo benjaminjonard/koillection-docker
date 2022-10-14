@@ -7,7 +7,7 @@ LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
 ENV PHP_TZ=Europe/Paris
 ENV HTTPS_ENABLED=1
 
-ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git firefox"
+ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git firefox-esr"
 ENV TOOL_DEPS="nginx-light"
 
 COPY entrypoint.sh inject.sh /
