@@ -25,7 +25,7 @@
         depends_on:
             - postgres
         volumes:
-            - ./:/var/www/koillection
+            - ./:/app
 
     postgres:
         image: postgres:alpine

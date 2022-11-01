@@ -1,69 +1,90 @@
-FROM debian:buster-slim
+FROM dunglas/frankenphp:latest
 
-# Set version label
-LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
+ARG GITHUB_RELEASE
 
 # Environment variables
+ENV PUID='1000'
+ENV PGID='1000'
+ENV USER='koillection'
 ENV PHP_TZ=Europe/Paris
-ENV HTTPS_ENABLED=1
-
-ENV BUILD_DEPS="ca-certificates apt-transport-https lsb-release wget curl git chromium chromium-driver"
-ENV TOOL_DEPS="nginx-light"
-
-# Chromium and ChromeDriver
-ENV PANTHER_NO_SANDBOX 1
-ENV PANTHER_CHROME_ARGUMENTS='--disable-dev-shm-usage'
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+ENV HTTPS_ENABLED=$HTTPS_ENABLED
 
 COPY entrypoint.sh inject.sh /
 
+RUN install-php-extensions \
+    apcu \
+    pdo_mysql \
+    pdo_pgsql \
+    gd \
+    intl \
+    zip \
+    opcache
+
 RUN \
-# Install php 8.1 and other dependencies
+# Add User and Group
+    addgroup --gid "$PGID" "$USER" && \
+    adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
+# Install dependencies
     apt-get update && \
-    apt-get install -y $BUILD_DEPS && \
-    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
+    apt-get install -y curl wget lsb-release  && \
+# Nodejs
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+# Yarn
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
     apt-get install -y \
-    php8.1 \
-    php8.1-curl \
-    php8.1-pgsql \
-    php8.1-mysql \
-    php8.1-mbstring \
-    php8.1-gd \
-    php8.1-xml \
-    php8.1-zip \
-    php8.1-fpm \
-    php8.1-intl \
-    php8.1-apcu \
-    php8.1-xdebug \
-    $TOOL_DEPS && \
-# Add composer
+    ca-certificates \
+    apt-transport-https \
+    gnupg2 \
+    git \
+    unzip \
+    nginx-light \
+    openssl \
+    nodejs \
+    yarn && \
+# Composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer --version && \
 # Clone the repo
-    mkdir -p /var/www/koillection && \
-    cd /var/www/koillection && \
-    chown -R www-data:www-data /var/www/koillection && \
-# Clean up
-    apt-get purge -y git && \
+    mkdir -p /app && \
+    curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/$GITHUB_RELEASE.tar.gz" && \
+    tar xf /tmp/koillection.tar.gz -C /app --strip-components=1 && \
+    rm -rf /tmp/* && \
+    cd /app && \
+    composer install --no-dev --classmap-authoritative --ignore-platform-req=php && \
+    composer clearcache && \
+# Dump translation files for javascript \
+    php bin/console bazinga:js-translation:dump assets/js --format=js && \
+# Build assets \
+    cd ./assets && \
+    yarn --version && \
+    yarn install && \
+    yarn build && \
+    cd /app && \
+# Clean up \
+    yarn cache clean && \
+    rm -rf ./assets/node_modules && \
+    apt-get purge -y wget lsb-release git nodejs yarn apt-transport-https ca-certificates gnupg2 unzip && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-# Set permisions
+    rm -rf /usr/local/bin/composer && \
+# Set permisions \
+    chown -R "$USER":"$USER" /app && \
     chmod +x /entrypoint.sh && \
     chmod +x /inject.sh && \
     mkdir /run/php
 
 # Add custom site to apache
-COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/8.1/fpm/conf.d/php.ini
-RUN echo "session.cookie_secure=$HTTPS_ENABLED" >> /etc/php/8.1/fpm/conf.d/php.ini
 
 EXPOSE 80
-VOLUME /var/www/koillection/public/uploads
-WORKDIR /var/www/koillection
 
-RUN usermod -u 1000 www-data
+VOLUME /conf /uploads
+
+WORKDIR /app
 
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 

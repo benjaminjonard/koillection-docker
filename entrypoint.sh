@@ -7,7 +7,7 @@ echo "**** Inject .env values ****" && \
 
 [ ! -e /tmp/first_run ] && \
 	echo "**** Migrate the database ****" && \
-	cd /var/www/koillection && \
+	cd /app && \
 	php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod && \
 	touch /tmp/first_run
 
