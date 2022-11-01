@@ -78,7 +78,7 @@ RUN \
     mkdir /run/php
 
 # Add custom site to apache
-COPY php.ini /etc/php/8.1/fpm/conf.d/php.ini
+COPY php.ini /usr/local/lib/php/php.ini
 
 EXPOSE 80
 
