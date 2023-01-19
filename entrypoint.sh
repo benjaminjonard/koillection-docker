@@ -16,5 +16,5 @@ mkdir -p /logs/nginx
 chown -R www-data:www-data /logs/nginx
 
 echo "**** Setup complete, starting the server. ****"
-php-fpm8.1
+php-fpm8.2
 exec $@
