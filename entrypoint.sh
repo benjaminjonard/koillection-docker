@@ -24,8 +24,8 @@ echo "**** 4/13 - Inject .env values ****"
 	/inject.sh
 
 echo "**** 5/13 - Configure https ****"
-if ! grep -q "session.cookie_secure=" /etc/php/8.1/fpm/conf.d/php.ini; then
-    echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.1/fpm/conf.d/php.ini
+if ! grep -q "session.cookie_secure=" /etc/php/8.2/fpm/conf.d/php.ini; then
+    echo "session.cookie_secure=${HTTPS_ENABLED}" >> /etc/php/8.2/fpm/conf.d/php.ini
 fi
 
 echo "**** 6/13 - Migrate the database ****"
@@ -69,7 +69,7 @@ echo "**** 12/13 - Create symfony log files ****" && \
 chown -R www-data:www-data /var/www/koillection/var
 
 echo "**** 13/13 - Setup complete, starting the server. ****"
-php-fpm8.1
+php-fpm8.2
 exec $@
 
 echo "**** All done ****"
