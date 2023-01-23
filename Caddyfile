@@ -1,4 +1,4 @@
-{$SERVER_NAME}
+:80
 
 log
 
