@@ -1,4 +1,4 @@
-localhost
+{$SERVER_NAME}
 
 log
 
