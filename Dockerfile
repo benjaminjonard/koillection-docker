@@ -93,6 +93,7 @@ COPY php.ini /etc/php/8.2/fpm/conf.d/php.ini
 
 EXPOSE 80
 EXPOSE 443
+EXPOSE 443/udp
 
 VOLUME /conf /uploads
 

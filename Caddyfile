@@ -1,13 +1,20 @@
-localhost
+:80
 
 log
 
 root * /srv/koillection/public
 
-php_fastcgi unix//run/php/php8.2-fpm.sock {
-	try_files {path} {path}/index.php {path}/index.html index.php
-	# Add trailing slash for directory requests
-}
+php_fastcgi unix//run/php/php8.2-fpm.sock
 
 encode zstd gzip
 file_server
+
+header {
+     Permissions-Policy interest-cohort=()
+     X-Frame-Options SAMEORIGIN;
+     X-Content-Type-Options nosniff;
+     X-XSS-Protection "1; mode=block";
+     Referrer-Policy no-referrer;
+     Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
+     Service-Worker-Allowed "/";
+}

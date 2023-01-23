@@ -10,18 +10,9 @@ services:
         container_name: koillection
         restart: unless-stopped
         ports:
-            # HTTP
-            - target: 80
-              published: ${HTTP_PORT:-80}
-              protocol: tcp
-            # HTTPS
-            - target: 443
-              published: ${HTTPS_PORT:-443}
-              protocol: tcp
-            # HTTP/3
-            - target: 443
-              published: ${HTTP3_PORT:-443}
-              protocol: udp
+            - 80:80
+            - 443:443
+            - 443:443/udp
         environment:
             - DB_DRIVER=pdo_pgsql
             - DB_NAME=koillection
