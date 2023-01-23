@@ -1,0 +1,13 @@
+localhost
+
+log
+
+root * /srv/koillection/public
+
+php_fastcgi unix//run/php/php8.2-fpm.sock {
+	try_files {path} {path}/index.php {path}/index.html index.php
+	# Add trailing slash for directory requests
+}
+
+encode zstd gzip
+file_server

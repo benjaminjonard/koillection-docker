@@ -1,7 +1,11 @@
 FROM debian:11-slim
 
+COPY --from=caddy:2 /usr/bin/caddy /usr/local/bin/
+COPY Caddyfile /etc/caddy/Caddyfile
+
+
 # Set version label
-LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
+LABEL maintainer="Benjamin Jonard"
 
 ARG GITHUB_RELEASE
 
@@ -40,7 +44,6 @@ RUN \
     gnupg2 \
     git \
     unzip \
-    nginx-light \
     openssl \
     php8.2 \
     php8.2-pgsql \
@@ -57,11 +60,11 @@ RUN \
 # Composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 # Clone the repo
-    mkdir -p /var/www/koillection && \
+    mkdir -p /srv/koillection && \
     curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/$GITHUB_RELEASE.tar.gz" && \
-    tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
+    tar xf /tmp/koillection.tar.gz -C /srv/koillection --strip-components=1 && \
     rm -rf /tmp/* && \
-    cd /var/www/koillection && \
+    cd /srv/koillection && \
     composer install --no-dev --classmap-authoritative && \
     composer clearcache && \
 # Dump translation files for javascript \
@@ -71,7 +74,7 @@ RUN \
     yarn --version && \
     yarn install && \
     yarn build && \
-    cd /var/www/koillection && \
+    cd /srv/koillection && \
 # Clean up \
     yarn cache clean && \
     rm -rf ./assets/node_modules && \
@@ -81,23 +84,22 @@ RUN \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /usr/local/bin/composer && \
 # Set permisions \
-    chown -R "$USER":"$USER" /var/www/koillection && \
+    chown -R "$USER":"$USER" /srv/koillection && \
     chmod +x /entrypoint.sh && \
     chmod +x /inject.sh && \
     mkdir /run/php
 
-# Add custom site to apache
-COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/8.2/fpm/conf.d/php.ini
 
 EXPOSE 80
+EXPOSE 443
 
 VOLUME /conf /uploads
 
-WORKDIR /var/www/koillection
+WORKDIR /srv/koillection
 
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD [ "nginx" ]
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
