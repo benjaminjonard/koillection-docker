@@ -30,7 +30,11 @@ fi
 if [ "$DB_VERSION" != '' ]; then
     sed -i "s|DB_VERSION=.*|DB_VERSION=${DB_VERSION}|i" "/var/www/koillection/.env.local"
 fi
+if [ "SENTRY_DSN" != '' ]; then
+    sed -i "s|SENTRY_DSN=.*|SENTRY_DSN=${SENTRY_DSN}|i" "/var/www/koillection/.env.local"
+fi
 
 if [ "$PHP_TZ" != '' ]; then
     sed -i "s|;*date.timezone =.*|date.timezone = ${PHP_TZ}|i" /etc/php/8.2/cli/php.ini
 fi
+
