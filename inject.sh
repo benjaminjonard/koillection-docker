@@ -101,12 +101,4 @@ if [ "$PHP_TZ" != '' ]; then
     sed -i "s|;*date.timezone =.*|date.timezone = ${PHP_TZ}|i" /etc/php/8.2/cli/php.ini
 fi
 
-#SENTRY_DSN
-SENTRY_DSN="${SENTRY_DSN:-}"
-if grep -q SENTRY_DSN "/conf/.env.local"; then
-  sed -i "s|SENTRY_DSN=.*|SENTRY_DSN=${SENTRY_DSN}|i" "/conf/.env.local"
-else
-  echo "SENTRY_DSN=${SENTRY_DSN}" >> "/conf/.env.local"
-fi
-
 cat /conf/.env.local
