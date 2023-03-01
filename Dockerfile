@@ -1,7 +1,4 @@
-FROM debian:11-slim
-
-# Set version label
-LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
+FROM dunglas/frankenphp
 
 ARG GITHUB_RELEASE
 
@@ -14,8 +11,6 @@ ENV APP_ENV=prod
 ENV APP_DEBUG=0
 ENV HTTPS_ENABLED=$HTTPS_ENABLED
 
-ENV BUILD_DEPS=""
-
 COPY entrypoint.sh inject.sh /
 
 RUN \
@@ -24,10 +19,7 @@ RUN \
     adduser --gecos '' --no-create-home --disabled-password --uid "$PUID" --gid "$PGID" "$USER" && \
 # Install dependencies
     apt-get update && \
-    apt-get install -y $BUILD_DEPS curl wget lsb-release  && \
-# PHP
-    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list && \
+    apt-get install -y curl wget lsb-release  && \
 # Nodejs
     curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
 # Yarn
@@ -35,33 +27,26 @@ RUN \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
     apt-get install -y \
-    ca-certificates \
-    apt-transport-https \
-    gnupg2 \
-    git \
-    unzip \
-    nginx-light \
-    openssl \
-    php8.2 \
-    php8.2-pgsql \
-    php8.2-mysql \
-    php8.2-mbstring \
-    php8.2-gd \
-    php8.2-xml \
-    php8.2-zip \
-    php8.2-fpm \
-    php8.2-intl \
-    php8.2-apcu \
-    nodejs \
-    yarn && \
+      ca-certificates \
+      apt-transport-https \
+      gnupg2 \
+      git \
+      openssl \
+      nodejs \
+      yarn && \
+    install-php-extensions pdo_pgsql && \
+    install-php-extensions pdo_mysql && \
+    install-php-extensions intl && \
+    install-php-extensions gd && \
+    install-php-extensions zip && \
 # Composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
 # Clone the repo
-    mkdir -p /var/www/koillection && \
+    mkdir -p /app && \
     curl -o /tmp/koillection.tar.gz -L "https://github.com/koillection/koillection/archive/$GITHUB_RELEASE.tar.gz" && \
-    tar xf /tmp/koillection.tar.gz -C /var/www/koillection --strip-components=1 && \
+    tar xf /tmp/koillection.tar.gz -C /app --strip-components=1 && \
     rm -rf /tmp/* && \
-    cd /var/www/koillection && \
+    cd /app && \
     composer install --no-dev --classmap-authoritative && \
     composer clearcache && \
 # Dump translation files for javascript \
@@ -71,33 +56,29 @@ RUN \
     yarn --version && \
     yarn install && \
     yarn build && \
-    cd /var/www/koillection && \
+    cd /app && \
 # Clean up \
     yarn cache clean && \
     rm -rf ./assets/node_modules && \
-    apt-get purge -y wget lsb-release git nodejs yarn apt-transport-https ca-certificates gnupg2 unzip && \
+    apt-get purge -y wget lsb-release git nodejs yarn apt-transport-https ca-certificates gnupg2 && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /usr/local/bin/composer && \
 # Set permisions \
-    chown -R "$USER":"$USER" /var/www/koillection && \
+    chown -R "$USER":"$USER" /app && \
     chmod +x /entrypoint.sh && \
     chmod +x /inject.sh && \
     mkdir /run/php
 
 # Add custom site to apache
-COPY default.conf /etc/nginx/nginx.conf
 COPY php.ini /etc/php/8.2/fpm/conf.d/php.ini
-
-EXPOSE 80
+COPY Caddyfile /etc/Caddyfile
 
 VOLUME /conf /uploads
 
-WORKDIR /var/www/koillection
+WORKDIR /app
 
 HEALTHCHECK CMD curl --fail http://localhost:80/ || exit 1
 
 ENTRYPOINT [ "/entrypoint.sh" ]
-
-CMD [ "nginx" ]

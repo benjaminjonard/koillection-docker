@@ -9,16 +9,16 @@ echo "**** 1/13 - Make sure the /conf and /uploads folders exist ****"
 	mkdir -p /uploads
 
 echo "**** 2/13 - Create the symbolic link for the /uploads folder ****"
-[ ! -L /var/www/koillection/public/uploads ] && \
-	cp -r /var/www/koillection/public/uploads/. /uploads && \
-	rm -r /var/www/koillection/public/uploads && \
-	ln -s /uploads /var/www/koillection/public/uploads
+[ ! -L /app/public/uploads ] && \
+	cp -r /app/public/uploads/. /uploads && \
+	rm -r /app/public/uploads && \
+	ln -s /uploads /app/public/uploads
 
 echo "**** 3/13 - Copy the .env to /conf ****"
 [ ! -e /conf/.env.local ] && \
 	touch /conf/.env.local
-[ ! -L /var/www/koillection/.env.local ] && \
-	ln -s /conf/.env.local /var/www/koillection/.env.local
+[ ! -L /app/.env.local ] && \
+	ln -s /conf/.env.local /app/.env.local
 
 echo "**** 4/13 - Inject .env values ****"
 	/inject.sh
@@ -29,15 +29,15 @@ if ! grep -q "session.cookie_secure=" /etc/php/8.2/fpm/conf.d/php.ini; then
 fi
 
 echo "**** 6/13 - Migrate the database ****"
-cd /var/www/koillection && \
+cd /app && \
 php bin/console doctrine:migration:migrate --no-interaction --allow-no-migration --env=prod
 
 echo "**** 7/13 - Refresh cached values ****"
-cd /var/www/koillection && \
+cd /app && \
 php bin/console app:refresh-cached-values --env=prod
 
 echo "**** 8/13 - Create API keys ****"
-cd /var/www/koillection && \
+cd /app && \
 php bin/console lexik:jwt:generate-keypair --overwrite --env=prod
 
 echo "**** 9/13 - Create user and use PUID/PGID ****"
@@ -60,16 +60,16 @@ mkdir -p /logs/nginx
 chown -R "$USER":"$USER" /logs/nginx
 
 echo "**** 12/13 - Create symfony log files ****" && \
-[ ! -f /var/www/koillection/var/log ] && \
-	mkdir -p /var/www/koillection/var/log
+[ ! -f /app/var/log ] && \
+	mkdir -p /app/var/log
 
-[ ! -f /var/www/koillection/var/log/prod.log ] && \
-	touch /var/www/koillection/var/log/prod.log
+[ ! -f /app/var/log/prod.log ] && \
+	touch /app/var/log/prod.log
 
-chown -R www-data:www-data /var/www/koillection/var
+chown -R www-data:www-data /app/var
 
 echo "**** 13/13 - Setup complete, starting the server. ****"
-php-fpm8.2
-exec $@
+frankenphp run --config /etc/Caddyfile
+exec "$@"
 
 echo "**** All done ****"
