@@ -1,12 +1,9 @@
 FROM debian:11-slim
 
-# Set version label
-LABEL maintainer="Benjamin Jonard <jonard.benjamin@gmail.com>"
-
 ARG GITHUB_RELEASE
 
 # Environment variables
-ENV APP_ENV=prod
+ENV APP_ENV='prod'
 ENV PUID='1000'
 ENV PGID='1000'
 ENV USER='koillection'
@@ -21,7 +18,7 @@ RUN addgroup --gid "$PGID" "$USER" && \
 RUN apt-get update && \
     apt-get install -y curl wget lsb-release
 
-# Add PHP
+# PHP
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg && \
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
 

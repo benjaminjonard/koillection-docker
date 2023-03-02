@@ -30,7 +30,6 @@
             depends_on:
                 - db
             volumes:
-                - ./docker/volumes/koillection/conf:/conf
                 - ./docker/volumes/koillection/uploads:/uploads
 
         # Database : choose one of the following
