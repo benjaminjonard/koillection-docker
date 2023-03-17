@@ -58,7 +58,7 @@ RUN addgroup --gid "$PGID" "$USER" && \
     composer clearcache && \
 # Dump translation files for javascript
     cd /var/www/koillection/ && \
-    php bin/console bazinga:js-translation:dump assets/js --format=js && \
+    php bin/console app:translations:dump && \
 # Install javascript dependencies and build assets
     cd /var/www/koillection/assets && \
     yarn --version && \
