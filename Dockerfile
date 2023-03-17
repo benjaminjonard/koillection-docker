@@ -65,7 +65,7 @@ RUN \
     composer install --no-dev --classmap-authoritative && \
     composer clearcache && \
 # Dump translation files for javascript \
-    php bin/console bazinga:js-translation:dump assets/js --format=js && \
+    php bin/console app:translations:dump && \
 # Build assets \
     cd ./assets && \
     yarn --version && \
