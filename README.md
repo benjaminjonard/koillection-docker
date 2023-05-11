@@ -1,4 +1,4 @@
-# ⚠️ DEPRECATED, see https://github.com/koillection/koillection dor Dockerfile ⚠️
+# ⚠️ DEPRECATED, see https://github.com/koillection/koillection for Dockerfile ⚠️
 
 # Dockerfile for Koillection
 
