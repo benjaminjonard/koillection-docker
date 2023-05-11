@@ -1,3 +1,5 @@
+# ⚠️ DEPRECATED, see https://github.com/koillection/koillection dor Dockerfile ⚠️
+
 # Dockerfile for Koillection
 
 - This is an image for running Koillection using `Docker`.
